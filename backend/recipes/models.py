@@ -73,7 +73,7 @@ class Recipe(models.Model):
     )
     image = models.ImageField(
         'Картинка',
-        upload_to='recipes/media',
+        upload_to='recipes/',
         null=False,
         blank=False,
     )
@@ -159,7 +159,7 @@ class AmountImgredientsInRecipe(models.Model):
         verbose_name='Ингредиент',
         related_name='amount_ingredient'
     )
-    amount_ingredients = models.PositiveSmallIntegerField(
+    amount = models.PositiveSmallIntegerField(
         validators=[MinValueValidator(
             settings.MINIMUM_INGREDIENT_IN_RECIPE,
             message='Минимальное количество ингредиентов - 1 шт.'
@@ -170,6 +170,7 @@ class AmountImgredientsInRecipe(models.Model):
     class Meta:
         verbose_name = 'Ингредиент'
         verbose_name_plural = 'Ингредиенты'
+        unique_together = ('recipe', 'ingredient')
         ordering = ('recipe', )
 
     def __str__(self):
@@ -194,6 +195,7 @@ class ShoppingCart(models.Model):
     class Meta:
         verbose_name = 'Рецепт в списке покупок'
         verbose_name_plural = 'Рецепты в списке покупок'
+        unique_together = ('recipe', 'user')
 
     def __str__(self):
         return f'{self.user} -> {self.recipe}'

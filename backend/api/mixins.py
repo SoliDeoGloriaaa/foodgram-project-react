@@ -7,3 +7,11 @@ class CreateRetrieveViewSet(
     viewsets.GenericViewSet
 ):
     pass
+
+
+class ListRetrieveViewSet(
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    viewsets.GenericViewSet,
+):
+    pass
