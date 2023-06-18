@@ -11,21 +11,17 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from .paginators import PageNumberPagination
-from api.serializers import (
-    FollowSerializer, UserReadSerializer, UserWriteSerializer
-)
 from users.models import Follow
-
 from api.serializers import (
-    IngredientSerializer, RecipeWriteSerializer,
-    RecipeReadSerializer, TagSerializer
+    IngredientSerializer, RecipeWriteSerializer, FollowSerializer,
+    UserReadSerializer, RecipeReadSerializer, TagSerializer,
+    UserWriteSerializer
 )
 from .mixins import ListRetrieveViewSet
 from recipes.models import (
     FavoriteRecipe, AmountImgredientsInRecipe, Ingredient,
     Recipe, ShoppingCart, Tag
 )
-from .paginators import PageNumberPaginator
 
 User = get_user_model()
 
@@ -129,7 +125,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     """Вьюха для рецептов."""
     queryset = Recipe.objects.all()
     permission_classes = (permissions.IsAuthenticated,)
-    pagination_class = PageNumberPaginator
+    pagination_class = PageNumberPagination
 
     def get_serializer_class(self):
         if self.request.method in permissions.SAFE_METHODS:
@@ -140,59 +136,39 @@ class RecipeViewSet(viewsets.ModelViewSet):
             permission_classes=(permissions.IsAuthenticated,))
     def favorite(self, request, **kwargs):
         """Метод добавляет рецепт в избранное, либо удаляет его."""
-        return self.toggle_favorite(request, kwargs, 'favorite')
+        return self.add_or_delete(request, model=FavoriteRecipe)
 
     @action(detail=True, methods=['post', 'delete'])
     def shopping_cart(self, request, **kwargs):
         """Метод добавляет рецепт в список покупок, или удаляет его."""
-        return self.toggle_favorite(request, kwargs, 'shopping_cart')
+        return self.add_or_delete(request, model=ShoppingCart)
 
-    def toggle_favorite(self, request, kwargs, favorite_type):
+    def add_or_delete(self, request, model):
         """
-        Метод добавляет/удаляет рецепт из избранного или список покупок.
+        Вспомогательный метод для добавления рецепта в список покупок
+        или удаления, или для добавления рецепта в избранное, либо удаления
         """
-        user = self.request.user
+        user = request.user
         recipe = self.get_object()
 
-        toggle_obj = None
-        if favorite_type == 'favorite':
-            toggle_obj = FavoriteRecipe.objects
-        toggle_obj = ShoppingCart.objects
-
-        favorite_obj = toggle_obj.filter(
+        favorite_obj = model.objects.filter(
             user=user,
             recipe=recipe
         ).exists()
 
         if request.method == 'POST':
             if favorite_obj:
-                return Response(
-                    {'message': settings.RECIPE_ALREADY_IN_FAVORITES},
-                    status=status.HTTP_400_BAD_REQUEST
-                )
-
-            toggle_obj.update_or_create(user=user, recipe=recipe)
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+            model.objects.update_or_create(user=user, recipe=recipe)
             return Response(
-                {'message': settings.RECIPE_ADDED_TO_FAVORITES_SUCCESSFULLY},
                 status=status.HTTP_201_CREATED
             )
 
         if not favorite_obj:
-            return Response(
-                {'message': settings.IS_NOT_IN_FAVORITES_OR_DELETED}
-            )
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
-        get_object_or_404(toggle_obj, user=user, recipe=recipe).delete()
-
-        if favorite_type == 'favorite':
-            message = settings.SUCCESSFULLY_REMOVED_FROM_FAVORITES
-        elif favorite_type == 'shopping_cart':
-            message = settings.SUCCESSFULLY_REMOVED_FROM_SHOPPING_LIST
-
-        return Response(
-            {'message': message},
-            status=status.HTTP_204_NO_CONTENT
-        )
+        get_object_or_404(model.objects, user=user, recipe=recipe).delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(detail=False, permission_classes=[permissions.IsAuthenticated])
     def download_shopping_cart(self, request):

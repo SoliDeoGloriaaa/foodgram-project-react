@@ -170,7 +170,12 @@ class AmountImgredientsInRecipe(models.Model):
     class Meta:
         verbose_name = 'Ингредиент'
         verbose_name_plural = 'Ингредиенты'
-        unique_together = ('recipe', 'ingredient')
+        constraints = [
+            models.UniqueConstraint(
+                fields=['recipe', 'ingredient'],
+                name='unique_ingredient_in_recipe'
+            )
+        ]
         ordering = ('recipe', )
 
     def __str__(self):
@@ -195,7 +200,12 @@ class ShoppingCart(models.Model):
     class Meta:
         verbose_name = 'Рецепт в списке покупок'
         verbose_name_plural = 'Рецепты в списке покупок'
-        unique_together = ('recipe', 'user')
+        constraints = [
+            models.UniqueConstraint(
+                fields=['recipe', 'user'],
+                name='unique_recipe_user'
+            )
+        ]
 
     def __str__(self):
         return f'{self.user} -> {self.recipe}'
