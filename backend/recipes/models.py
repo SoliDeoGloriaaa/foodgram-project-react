@@ -49,7 +49,7 @@ class Ingredient(models.Model):
     class Meta:
         verbose_name = 'Ингредиент'
         verbose_name_plural = 'Ингредиенты'
-        ordering = ('id', )
+        ordering = ('name',)
 
     def __str__(self):
         return f'{self.name}'
@@ -164,7 +164,7 @@ class AmountImgredientsInRecipe(models.Model):
             settings.MINIMUM_INGREDIENT_IN_RECIPE,
             message='Минимальное количество ингредиентов - 1 шт.'
         )],
-        verbose_name='Количество ингредиентов'
+        verbose_name='Количество ингредиентов',
     )
 
     class Meta:
@@ -187,7 +187,7 @@ class ShoppingCart(models.Model):
     recipe = models.ForeignKey(
         Recipe,
         verbose_name='В корзине',
-        related_name='in_carts',
+        related_name='is_in_shopping_cart',
         on_delete=models.CASCADE,
     )
     user = models.ForeignKey(

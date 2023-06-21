@@ -1,13 +1,11 @@
-# Это тоже пока ещё в процессе =)
-
 version: '3.3'
 services:
-  db: 
-    image: postgres:13.0-alpine 
-    volumes: 
-      - /var/lib/postgresql/data/ 
+  db:
+    image: postgres:13.0-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
     env_file:
-      - ./.env 
+      - ./.env
 
   frontend:
     build:
@@ -17,18 +15,16 @@ services:
       - ../frontend/:/app/result_build/
 
   backend:
-    build:
-      context: ../backend
-      dockerfile: Dockerfile
+    container_name: backend
+    build: ../backend/
     restart: always
     volumes:
-      - static_value:/code/static/
-      - media_value:/code/media/
+      - static_dir:/app/static/
+      - media_dir:/app/media/
     depends_on:
       - db
     env_file:
       - ./.env
-
 
   nginx:
     image: nginx:1.19.3
@@ -38,37 +34,14 @@ services:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
       - ../frontend/build:/usr/share/nginx/html/
       - ../docs/:/usr/share/nginx/html/api/docs/
+      - static_dir:/var/html/static/
+      - media_dir:/var/html/media/
+
     depends_on:
-    - backend
-    - frontend
+      - backend
+      - frontend
 
-volumes: 
-  static_value: 
-  media_value:
-
-# version: '3.3'
- 
-# services: 
-#   db: 
-#     image: postgres:13.0-alpine 
-#     volumes: 
-#       - /var/lib/postgresql/data/ 
-#     env_file:
-#       - ./.env 
-
-#   nginx: 
-#     image: nginx:1.21.3-alpine 
- 
-#     ports: 
-#       - "80:80" 
- 
-#     volumes: 
-#       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf 
- 
-#       - static_value:/var/html/static/ 
- 
-#       - media_value:/var/html/media/ 
- 
-#     depends_on: 
-#       - web 
- 
+volumes:
+  static_dir:
+  media_dir:
+  postgres_data:
