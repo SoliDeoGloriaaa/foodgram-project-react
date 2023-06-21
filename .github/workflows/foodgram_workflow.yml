@@ -23,7 +23,7 @@ jobs:
       run: | 
         python -m flake8 
  
-  build_and_push_to_docker_hub: 
+  build_push_backend_to_docker_hub: 
       name: Push Docker image to Docker Hub 
       runs-on: ubuntu-latest 
       needs: tests 
@@ -70,7 +70,9 @@ jobs:
 
   deploy: 
       runs-on: ubuntu-latest 
-      needs: build_and_push_to_docker_hub 
+      needs: 
+      - build_push_backend_to_docker_hub
+      - build_push_frontend_to_docker_hub
       steps: 
       - name: executing remote ssh commands to deploy 
         uses: appleboy/ssh-action@master 
