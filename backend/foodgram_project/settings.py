@@ -82,7 +82,6 @@ WSGI_APPLICATION = 'foodgram_project.wsgi.application'
 #     }
 # }
 
-#БД для второго этапа проверки
 DATABASES = {
     'default': {
         'ENGINE': os.getenv('DB_ENGINE', default='django.db.backends.postgresql'),
