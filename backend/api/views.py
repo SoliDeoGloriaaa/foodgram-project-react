@@ -228,7 +228,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
 
 # class RecipeViewSet(viewsets.ModelViewSet):
-#     """Вьюха для рецептов.
 #     queryset = Recipe.objects.all()
 #     permission_classes = (permissions.IsAuthenticated,)
 #     filterset_class = RecipeFilter
