@@ -227,7 +227,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
         return response
 
 
-# class RecipeViewSet(viewsets.ModelViewSet):
 #     queryset = Recipe.objects.all()
 #     permission_classes = (permissions.IsAuthenticated,)
 #     filterset_class = RecipeFilter
