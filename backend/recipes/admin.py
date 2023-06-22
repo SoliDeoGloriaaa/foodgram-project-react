@@ -53,10 +53,6 @@ class RecipeAdmin(admin.ModelAdmin):
     inlines = (AmountImgredientsInRecipeAdmin,)
     empty_value_display = '-пусто-'
 
-    @admin.display(description='В избранном')
-    def favorite_count(self, obj):
-        return obj.is_favorited.count()
-
 
 class FollowAdmin(admin.ModelAdmin):
     list_display = (
