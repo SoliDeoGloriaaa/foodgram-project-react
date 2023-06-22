@@ -187,9 +187,13 @@ class RecipeViewSet(viewsets.ModelViewSet):
     )
     def favorite(self, request, **kwargs):
         if request.method == 'POST':
-            return self.add_recipe(FavoriteRecipe, request, kwargs.get('pk'))
+            return self.add_recipe(
+                FavoriteRecipe, request, kwargs.get('pk')
+            )
         if request.method == 'DELETE':
-            return self.delete_recipe(FavoriteRecipe, request, kwargs.get('pk'))
+            return self.delete_recipe(
+                FavoriteRecipe, request, kwargs.get('pk')
+            )
 
     @action(
         detail=True,
