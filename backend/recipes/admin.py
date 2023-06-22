@@ -86,4 +86,3 @@ admin.site.register(Follow)
 admin.site.register(FavoriteRecipeAdmin, FavoriteRecipeAdmin)
 admin.site.register(AmountImgredientsInRecipe)
 admin.site.register(FavoriteRecipe, FavoriteRecipeAdmin)
-
