@@ -50,6 +50,7 @@ git clone https://github.com/SoliDeoGloriaaa/foodgram-project-react.git
 
 3. Запустить ```docker-compose```
     Выполнить команду
+
 ```
 docker-compose up -d
 ```
