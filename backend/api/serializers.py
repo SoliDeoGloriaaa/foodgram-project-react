@@ -151,7 +151,6 @@ class RecipeReadSerializer(serializers.ModelSerializer):
         """получаем ингредиенты."""
         recipe = obj
         return recipe.ingredients.values(
-            'id',
             'name',
             'measurement_unit',
             amount=F('recipes__amount_ingredient')
