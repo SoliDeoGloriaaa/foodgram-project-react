@@ -53,11 +53,11 @@ class RecipeAdmin(admin.ModelAdmin):
     empty_value_display = '-пусто-'
 
 
-class FollowAdmin(admin.ModelAdmin):
-    list_display = (
-        'user',
-        'author',
-    )
+class SubscriptionAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user', 'author',
+                    'subscribe_date')
+    search_fields = ('user__username', 'author__username')
+    empty_value_display = '-пусто-'
 
 
 class FavoriteRecipeAdmin(admin.ModelAdmin):
@@ -82,7 +82,7 @@ admin.site.register(Ingredient, IngredientAdmin)
 admin.site.register(Recipe, RecipeAdmin)
 admin.site.register(Tag, TagAdmin)
 admin.site.register(ShoppingCart, ShoppingCartAdmin)
-admin.site.register(FollowAdmin, Follow)
+admin.site.register(SubscriptionAdmin, Follow)
 admin.site.register(FavoriteRecipeAdmin, FavoriteRecipeAdmin)
 admin.site.register(AmountImgredientsInRecipe)
 admin.site.register(FavoriteRecipe)
