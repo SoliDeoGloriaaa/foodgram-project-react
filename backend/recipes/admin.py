@@ -46,7 +46,6 @@ class RecipeAdmin(admin.ModelAdmin):
         'text',
         'cooking_time',
         'pub_date',
-        'favorite_count'
     )
     search_fields = ('name', 'author', 'tag')
     list_filter = ('name',)
@@ -63,19 +62,19 @@ class FollownAdmin(admin.ModelAdmin):
 
 class FavoriteRecipeAdmin(admin.ModelAdmin):
     list_display = (
-        'author',
+        'user',
     )
-    search_fields = ('author',)
-    list_filter = ('author',)
+    search_fields = ('user',)
+    list_filter = ('user',)
     empty_value_display = '-пусто-'
 
 
 class ShoppingCartAdmin(admin.ModelAdmin):
     list_display = (
-        'author',
+        'user',
     )
-    search_fields = ('author',)
-    list_filter = ('author',)
+    search_fields = ('user',)
+    list_filter = ('user',)
     empty_value_display = '-пусто-'
 
 
