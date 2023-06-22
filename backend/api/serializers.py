@@ -1,9 +1,9 @@
+from django.contrib.auth.password_validation import validate_password
 from django.db import transaction
+from django.db.models import F
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
-from django.db.models import F
-from django.contrib.auth.password_validation import validate_password
 
 from recipes.models import (
     AmountImgredientsInRecipe, FavoriteRecipe, Ingredient,

@@ -18,8 +18,8 @@ from api.serializers import (
     UserReadSerializer, RecipeReadSerializer, TagSerializer,
     UserWriteSerializer, GetFollowerRecipeSerializer, UserSetPasswordSerializer
 )
-from .permissions import IsAdminOrAuthorOrReadOnly
 from .filters import RecipeFilter, IngredientFilter
+from .permissions import IsAdminOrAuthorOrReadOnly
 from .mixins import ListRetrieveViewSet
 from recipes.models import (
     FavoriteRecipe, AmountImgredientsInRecipe, Ingredient,
@@ -150,6 +150,7 @@ class IngredientViewSet(ListRetrieveViewSet):
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
+    """Вьюха для рецептов."""
     queryset = Recipe.objects.all()
     pagination_class = PageNumberPagination
     filterset_class = RecipeFilter
@@ -225,56 +226,3 @@ class RecipeViewSet(viewsets.ModelViewSet):
         response = HttpResponse(shopping, content_type='text/plain')
         response['Content-Disposition'] = f'attachment; filename={filename}'
         return response
-
-
-#     pagination_class = PageNumberPagination
-#     filter_backends = (DjangoFilterBackend,)
-
-    # def get_serializer_class(self):
-    #     if self.request.method in permissions.SAFE_METHODS:
-    #         return RecipeReadSerializer
-    #     return RecipeWriteSerializer
-
-#     @action(detail=True, methods=['post', 'delete'],
-#             permission_classes=(permissions.IsAuthenticated,))
-#     def favorite(self, request, **kwargs):
-#         """Метод добавляет рецепт в избранное, либо удаляет его."""
-#         return self.add_or_delete(request, model=FavoriteRecipe)
-
-#     @action(detail=True, methods=['post', 'delete'])
-#     def shopping_cart(self, request, **kwargs):
-#         """Метод добавляет рецепт в список покупок, или удаляет его."""
-#         return self.add_or_delete(request, model=ShoppingCart)
-
-#     def add_or_delete(self, request, model):
-#         """
-#         Вспомогательный метод для добавления рецепта в список покупок
-#         или удаления, или для добавления рецепта в избранное, либо удаления
-#         """
-#         user = request.user
-#         recipe = self.get_object()
-
-#         favorite_obj = model.objects.filter(
-#             user=user,
-#             recipe=recipe
-#         ).exists()
-
-#         if request.method == 'POST':
-#             if favorite_obj:
-#                 return Response(
-#                     {'message': 'такой рецепт уже есть в избраном/корзине'},
-#                     status=status.HTTP_400_BAD_REQUEST
-#                 )
-#             model.objects.update_or_create(user=user, recipe=recipe)
-#             return Response(
-#                 status=status.HTTP_201_CREATED
-#             )
-
-#         if not favorite_obj:
-#             return Response(
-#                 {'message': 'нет или удалили.'},
-#                 status=status.HTTP_400_BAD_REQUEST
-#             )
-
-#         get_object_or_404(model.objects, user=user, recipe=recipe).delete()
-#         return Response(status=status.HTTP_204_NO_CONTENT)
