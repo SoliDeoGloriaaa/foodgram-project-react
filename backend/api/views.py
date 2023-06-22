@@ -171,7 +171,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         serializer = GetFollowerRecipeSerializer(recipe)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    def del_recipe(self, model, request, pk):
+    def delete_recipe(self, model, request, pk):
         recipe = get_object_or_404(Recipe, id=pk)
         models = model.objects.filter(user=request.user, recipe=recipe)
         if models.exists():
@@ -189,7 +189,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         if request.method == 'POST':
             return self.add_recipe(FavoriteRecipe, request, kwargs.get('pk'))
         if request.method == 'DELETE':
-            return self.del_recipe(FavoriteRecipe, request, kwargs.get('pk'))
+            return self.delete_recipe(FavoriteRecipe, request, kwargs.get('pk'))
 
     @action(
         detail=True,
@@ -201,7 +201,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         if request.method == 'POST':
             return self.add_recipe(ShoppingCart, request, kwargs.get('pk'))
         if request.method == 'DELETE':
-            return self.del_recipe(ShoppingCart, request, kwargs.get('pk'))
+            return self.delete_recipe(ShoppingCart, request, kwargs.get('pk'))
 
     @action(detail=False, permission_classes=[permissions.IsAuthenticated])
     def download_shopping_cart(self, request):

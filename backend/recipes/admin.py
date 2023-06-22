@@ -1,6 +1,10 @@
 from django.contrib import admin
 
 from .models import (
+    AmountImgredientsInRecipe, FavoriteRecipe, Ingredient, Recipe, Tag
+)
+
+from .models import (
     AmountImgredientsInRecipe,
     FavoriteRecipe,
     Ingredient,
