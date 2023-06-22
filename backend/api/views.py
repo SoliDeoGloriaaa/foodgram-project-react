@@ -227,7 +227,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
         return response
 
 
-#     queryset = Recipe.objects.
 #     filterset_class = RecipeFilter
 #     pagination_class = PageNumberPagination
 #     filter_backends = (DjangoFilterBackend,)
