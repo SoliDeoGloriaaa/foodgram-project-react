@@ -8,15 +8,12 @@ services:
       - ./.env
 
   frontend:
-    build:
-      context: ../frontend
-      dockerfile: Dockerfile
+    image: bonjourgod/diplom-frontend:v.1
     volumes:
       - ../frontend/:/app/result_build/
 
   backend:
-    container_name: backend
-    build: ../backend/
+    image: bonjourgod/diplom-backend:v.1
     restart: always
     volumes:
       - static_dir:/app/static/
