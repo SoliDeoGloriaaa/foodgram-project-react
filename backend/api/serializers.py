@@ -195,25 +195,26 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
         )
 
     @transaction.atomic
-    def create_ingredients_amounts(self, ingredients, recipe):
+    def create_ingredients(self, recipe, ingredients):
         AmountImgredientsInRecipe.objects.bulk_create(
             [AmountImgredientsInRecipe(
-                ingredient=Ingredient.objects.get(id=ingredient['id']),
                 recipe=recipe,
-                amount=ingredient['amount']
+                amount=ingredient['amount'],
+                ingredient_id=ingredient['id']
             ) for ingredient in ingredients]
         )
 
     @transaction.atomic
     def create(self, validated_data):
-        tags = validated_data.pop('tags')
+        user = self.context.get('request').user
         ingredients = validated_data.pop('ingredients')
-        recipe = Recipe.objects.create(**validated_data)
-        recipe.tags.set(tags)
-        self.create_ingredients_amounts(
-            recipe=recipe,
-            ingredients=ingredients
+        tags = validated_data.pop('tags')
+        recipe = Recipe.objects.create(
+            author=user,
+            **validated_data
         )
+        self.create_ingredients(recipe, ingredients)
+        recipe.tags.set(tags)
         return recipe
 
     @transaction.atomic
@@ -224,7 +225,7 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
         instance.tags.clear()
         instance.tags.set(tags)
         instance.ingredients.clear()
-        self.create_ingredients_amounts(
+        self.create_ingredients(
             recipe=instance,
             ingredients=ingredients
         )
