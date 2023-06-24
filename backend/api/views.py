@@ -11,7 +11,7 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from .paginators import PageNumberPagination
+from .paginators import CustomPageNumberPaginator
 from users.models import Follow
 from api.serializers import (
     IngredientSerializer, RecipeWriteSerializer, FollowSerializer,
@@ -41,7 +41,7 @@ class FollowViewSet(viewsets.ModelViewSet):
 
 class UsersViewSet(UserViewSet):
     """Вьюха для юзеров."""
-    pagination_class = PageNumberPagination
+    pagination_class = CustomPageNumberPaginator
     permission_classes = (IsAuthenticated,)
 
     def get_serializer_class(self):
@@ -152,7 +152,7 @@ class IngredientViewSet(ListRetrieveViewSet):
 class RecipeViewSet(viewsets.ModelViewSet):
     """Вьюха для рецептов."""
     queryset = Recipe.objects.all()
-    pagination_class = PageNumberPagination
+    pagination_class = CustomPageNumberPaginator
     filterset_class = RecipeFilter
     permission_classes = [IsAdminOrAuthorOrReadOnly]
     filter_backends = (DjangoFilterBackend,)

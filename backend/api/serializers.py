@@ -194,6 +194,18 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
             'cooking_time'
         )
 
+    def validate(self, data):
+        ingredients = self.initial_data.get('ingredients')
+        ingredient_list = []
+        for ingredient in ingredients:
+            ingredient_id = ingredient['id']
+            if ingredient_id in ingredient_list:
+                raise serializers.ValidationError(
+                    'Ингредиент должен быть уникальным!'
+                )
+            ingredient_list.append(ingredient_id)
+        return data
+
     @transaction.atomic
     def create_ingredients(self, recipe, ingredients):
         AmountImgredientsInRecipe.objects.bulk_create(
